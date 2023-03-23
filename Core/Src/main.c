@@ -398,7 +398,7 @@ void StartDefaultTask(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-    uint8_t txt[100]="GPIB1\r\n";
+    uint8_t txt[100]="GPIB-OE1\r\n";
     uint8_t rec[10];
     HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
     HAL_UART_Transmit(&huart3, txt, sizeof(txt), 500);
@@ -421,7 +421,7 @@ void StartTask02(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-    uint8_t txt[100]="GPIB2\r\n";
+    uint8_t txt[100]="GPIB-OE2\r\n";
     HAL_UART_Transmit(&huart3, txt, sizeof(txt), 500);
     HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
            /* uart_write_buf(UART3, "Hola chiquita2\r\n", 16); */
@@ -443,7 +443,7 @@ void StartTask03(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-    uint8_t txt[100]="GPIB3\r\n";
+    uint8_t txt[100]="GPIB-OE3\r\n";
     HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);
     HAL_UART_Transmit(&huart3, txt, sizeof(txt), 500);
     osDelay(30000);
