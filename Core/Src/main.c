@@ -47,104 +47,6 @@ osThreadId myTask02Handle;
 osThreadId myTask03Handle;
 /* USER CODE BEGIN PV */
 
-/* static inline void spin(volatile uint32_t count) { */
-/*   while (count--) asm("nop"); */
-/* } */
-
-/* #define BIT(x) (1UL << (x)) */
-/* #define PIN(bank, num) ((((bank) - 'A') << 8) | (num)) */
-/* #define PINNO(pin) (pin & 255) */
-/* #define PINBANK(pin) (pin >> 8) */
-
-/* #define GPIO(bank) ((struct gpio *) (0x40020000 + 0x400 * (bank))) */
-
-
-/* enum { APB1_PRE = 4 /\* AHB clock / 4 *\/, APB2_PRE = 4 /\* AHB clock / 2 *\/ }; */
-/* enum { PLL_HSI = 16, PLL_M = 16, PLL_N = 336, PLL_P = 4 };  // Run at 180 Mhz */
-/* #define SYS_FREQUENCY ((PLL_HSI * PLL_N / PLL_M / PLL_P) * 1000000) */
-/* #define APB2_FREQUENCY (SYS_FREQUENCY / (BIT(APB2_PRE - 3))) */
-/* #define APB1_FREQUENCY (SYS_FREQUENCY / (BIT(APB1_PRE - 3))) */
-
-
-/* struct gpio { */
-/*   volatile uint32_t MODER, OTYPER, OSPEEDR, PUPDR, IDR, ODR, BSRR, LCKR, AFR[2]; */
-/* }; */
-/* enum { GPIO_MODE_IN, GPIO_MODE_OUTPUT, GPIO_MODE_AF, GPIO_MODE_ANLOG }; */
-
-/* static inline void gpio_set_mode(uint16_t pin, uint8_t mode) { */
-/*   struct gpio *gpio = GPIO(PINBANK(pin));  // GPIO bank */
-/*   int n = PINNO(pin);                      // Pin number */
-/*   RCC->AHB1ENR |= BIT(PINBANK(pin));       // Enable GPIO clock */
-/*   gpio->MODER &= ~(3U << (n * 2));         // Clear existing setting */
-/*   gpio->MODER |= (mode & 3U) << (n * 2);   // Set new mode */
-/* } */
-
-/* static inline void gpio_set_af(uint16_t pin, uint8_t af_num) { */
-/*   struct gpio *gpio = GPIO(PINBANK(pin));  // GPIO bank */
-/*   int n = PINNO(pin);                      // Pin number */
-/*   gpio->AFR[n >> 3] &= ~(15UL << ((n & 7) * 4)); */
-/*   gpio->AFR[n >> 3] |= ((uint32_t) af_num) << ((n & 7) * 4); */
-/* } */
-
-/* static inline void gpio_write(uint16_t pin, uint8_t val) { */
-/*   struct gpio *gpio = GPIO(PINBANK(pin)); */
-/*   gpio->BSRR = (1U << PINNO(pin)) << (val ? 0 : 16); */
-/* } */
-
-/* struct uart { */
-/*   volatile uint32_t SR, DR, BRR, CR1, CR2, CR3, GTPR; */
-/* }; */
-
-/* //#define UART1 ((struct uart *) 0x40011000) */
-/* //#define UART2 ((struct uart *) 0x40004400) */
-/* //#define UART3 ((struct uart *) 0x40004800) */
-
-/* #define UART1 USART1 */
-/* #define UART2 USART2 */
-/* #define UART3 USART3 */
-
-
-
-/* static inline void uart_init(USART_TypeDef *uart, unsigned long baud) { */
-/*   // https://www.st.com/resource/en/datasheet/stm32f429zi.pdf */
-/*   uint8_t af = 7;           // Alternate function */
-/*   uint16_t rx = 0, tx = 0;  // pins */
-/*   uint32_t freq = 0;        // Bus frequency. UART1 is on APB2, rest on APB1 */
-
-/*   if (uart == UART1) freq = APB2_FREQUENCY, RCC->APB2ENR |= BIT(4); */
-/*   if (uart == UART2) freq = APB1_FREQUENCY, RCC->APB1ENR |= BIT(17); */
-/*   if (uart == UART3) freq = APB1_FREQUENCY, RCC->APB1ENR |= BIT(18); */
-
-/*   if (uart == UART1) tx = PIN('A', 9), rx = PIN('A', 10); */
-/*   if (uart == UART2) tx = PIN('A', 2), rx = PIN('A', 3); */
-/*   if (uart == UART3) tx = PIN('C', 10), rx = PIN('C', 11); */
-
-/*   gpio_set_mode(tx, GPIO_MODE_AF); */
-/*   gpio_set_af(tx, af); */
-/*   gpio_set_mode(rx, GPIO_MODE_AF); */
-/*   gpio_set_af(rx, af); */
-/*   uart->CR1 = 0;                           // Disable this UART */
-/*   uart->BRR = freq / baud;                 // Set baud rate */
-/*   uart->CR1 |= BIT(13) | BIT(2) | BIT(3);  // Set UE, RE, TE */
-/* } */
-
-/* static inline void uart_write_byte(USART_TypeDef *uart, uint8_t byte) { */
-/*   uart->DR = byte; */
-/*   while ((uart->SR & BIT(7)) == 0) spin(1); */
-/* } */
-
-/* static inline void uart_write_buf(USART_TypeDef *uart, char *buf, size_t len) { */
-/*   while (len-- > 0) uart_write_byte(uart, *(uint8_t *) buf++); */
-/* } */
-
-/* static inline int uart_read_ready(USART_TypeDef *uart) { */
-/*   return uart->SR & BIT(5);  // If RXNE bit is set, data is ready */
-/* } */
-
-/* static inline uint8_t uart_read_byte(USART_TypeDef *uart) { */
-/*   return (uint8_t) (uart->DR & 255); */
-/* } */
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -197,19 +99,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   uint8_t byte;
   HAL_UART_Receive_IT(&huart3, &byte, 1);
-    /* HAL_UART_MspInit(&huart3); */
 
-  
-  /* uart_init(UART3, 115200);              // Initialise UART */
-  /* uart_write_buf(UART3, "Hola chiquita1\r\n", 16); */
-  /* uart_write_buf(UART3, "Hola chiquita1\r\n", 16); */
-  /* uart_write_buf(UART3, "Hola chiquita1\r\n", 16);   */
-
-    /* uint8_t txt[100]="GPIB1\n\r"; */
-    /* HAL_UART_Transmit(&huart3, txt, sizeof(txt), 500); */
-    /* HAL_UART_Transmit(&huart3, txt, sizeof(txt), 500); */
-    /* HAL_UART_Transmit(&huart3, txt, sizeof(txt), 500); */
-    /* HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET); */
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -424,7 +314,7 @@ void StartTask02(void const * argument)
     uint8_t txt[100]="GPIB-OE-YP2\r\n";
     HAL_UART_Transmit(&huart3, txt, sizeof(txt), 500);
     HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
-           /* uart_write_buf(UART3, "Hola chiquita2\r\n", 16); */
+    /* uart_write_buf(UART3, "Hola chiquita2\r\n", 16); */
     osDelay(5000);
   }
   /* USER CODE END StartTask02 */
